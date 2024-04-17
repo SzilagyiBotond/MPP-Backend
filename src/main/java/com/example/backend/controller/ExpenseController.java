@@ -49,7 +49,6 @@ public class ExpenseController {
         //return personRepository.findAll();
         Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         LoggerFactory.getLogger(ExpenseController.class).info(String.valueOf(direction));
-        // Return expenses sorted based on the sortBy parameter and sortOrder parameter
         return personRepository.findAll(Sort.by(direction, field));
     }
 
@@ -92,7 +91,6 @@ public class ExpenseController {
     List<Expense> allExpense(@RequestParam(name = "field", required = false, defaultValue = "name") String field,@RequestParam(name = "order", required = false, defaultValue = "asc") String order){
         Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         LoggerFactory.getLogger(ExpenseController.class).info(String.valueOf(direction));
-        // Return expenses sorted based on the sortBy parameter and sortOrder parameter
         return repository.findAll(Sort.by(direction, field));
 //        return repository.findAll();
     }
