@@ -7,7 +7,9 @@ import com.example.backend.exceptions.ExpenseNotFoundException;
 import com.example.backend.model.Expense;
 import com.example.backend.repository.PersonRepository;
 import jakarta.validation.Valid;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -43,7 +45,13 @@ public class ExpenseController {
         this.personRepository = personRepository;
     }
     @GetMapping("/persons")
-    List<Person> allPerson(){return personRepository.findAll();}
+    List<Person> allPerson(@RequestParam(name = "field", required = false, defaultValue = "name") String field,@RequestParam(name = "order", required = false, defaultValue = "asc") String order){
+        //return personRepository.findAll();
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        LoggerFactory.getLogger(ExpenseController.class).info(String.valueOf(direction));
+        // Return expenses sorted based on the sortBy parameter and sortOrder parameter
+        return personRepository.findAll(Sort.by(direction, field));
+    }
 
     @PostMapping("/persons")
     @ResponseStatus(HttpStatus.CREATED)
@@ -81,8 +89,12 @@ public class ExpenseController {
     }
 
     @GetMapping("/expenses")
-    List<Expense> allExpense(){
-        return repository.findAll();
+    List<Expense> allExpense(@RequestParam(name = "field", required = false, defaultValue = "name") String field,@RequestParam(name = "order", required = false, defaultValue = "asc") String order){
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        LoggerFactory.getLogger(ExpenseController.class).info(String.valueOf(direction));
+        // Return expenses sorted based on the sortBy parameter and sortOrder parameter
+        return repository.findAll(Sort.by(direction, field));
+//        return repository.findAll();
     }
 
     @PostMapping("/expenses")
